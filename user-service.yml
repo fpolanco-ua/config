@@ -19,9 +19,12 @@ server:
 #    listOfServers:  http://localhost:8083/,http://localhost:8085/
 
 
-
-#Eureka
 eureka:
+  instance:
+    # OBLIGATORIO: Usa la IP numérica (192.168.x.x o 127.0.0.1) en vez del hostname
+    prefer-ip-address: true 
+    # Opcional: Para asegurar que sea localhost si estás desarrollando local
+    # hostname: localhost 
   client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+    service-url:
+      defaultZone: http://localhost:8761/eureka
