@@ -5,6 +5,7 @@ spring:
     config:
       uri: http://localhost:9000
 
+# CONFIGURACIÓN DE RUTAS (Correcto)
 zuul:
   routes:
     user-service:
@@ -13,9 +14,27 @@ zuul:
     task-service:
       path: /task-service/**
       service-id: task-service
+  # RECOMENDACIÓN: Permite cabeceras sensibles (como Authorization/Cookies) si usas seguridad
+  sensitive-headers: Cookie,Set-Cookie
 
-#Eureka
+# EUREKA (Correcto)
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+
+# --- EL PARCHE DE INGENIERÍA (OBLIGATORIO PARA EVITAR ERROR 504) ---
+
+# 1. Aumentamos el tiempo que Zuul/Ribbon espera para CONECTAR y LEER
+ribbon:
+  ReadTimeout: 60000      # 60 segundos (Exagerado a propósito para dev)
+  ConnectTimeout: 60000   # 60 segundos
+
+# 2. Aumentamos el tiempo que el circuito (Hystrix) espera antes de cortar
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 60000 # Debe ser >= (ribbon.ReadTimeout + ribbon.ConnectTimeout)
