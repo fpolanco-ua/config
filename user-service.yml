@@ -22,3 +22,17 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+
+
+# AGREGA ESTO EN user-service.yml
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 60000
+
+# Como usas Feign, a veces es necesario esto también para que Feign respete a Ribbon:
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 60000
+        readTimeout: 60000
